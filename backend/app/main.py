@@ -21,14 +21,9 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Enable CORS — restricted to the configured frontend origin (A4 partial fix)
-# FRONTEND_URL env var defaults to http://localhost:5173 for local dev
-allowed_origins = [settings.FRONTEND_URL]
-# During local dev, also allow the Vite default port if not already included
-if "5173" not in settings.FRONTEND_URL:
-    allowed_origins.append("http://localhost:5173")
-if "5174" not in settings.FRONTEND_URL:
-    allowed_origins.append("http://localhost:5174")
+# Enable CORS — FRONTEND_URL may be a comma-separated list of origins
+# Local Vite (5173) and same-origin Docker/backend (8000) are always included
+allowed_origins = settings.frontend_origins()
 
 app.add_middleware(
     CORSMiddleware,

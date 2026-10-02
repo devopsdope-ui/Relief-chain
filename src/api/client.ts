@@ -6,7 +6,9 @@
  * The frontend has zero simulation logic of its own.
  */
 
-const BASE_URL = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8000';
+export const BASE_URL = (
+  (import.meta.env.VITE_API_URL as string) || 'http://localhost:8000'
+).replace(/\/+$/, '');
 const WS_URL = BASE_URL.replace(/^http/, 'ws');
 
 // ─── REST helpers ─────────────────────────────────────────────────────────────

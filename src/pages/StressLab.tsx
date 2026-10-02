@@ -22,6 +22,7 @@ import {
   AlertTriangle, Flame, ShieldAlert, Cpu, Network, Zap
 } from 'lucide-react';
 import type { Ambulance, Incident, Road, Hospital } from '@/types';
+import { BASE_URL } from '@/api/client';
 
 interface CrisisProfile {
   level: string;
@@ -85,8 +86,7 @@ export function StressLabPage() {
   // Load profile data from API or generate client-side
   const loadProfile = async (lvl: string) => {
     try {
-      const API = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8000';
-      const res = await fetch(`${API}/api/stress/scenario?level=${lvl}&seed=${seed}`);
+      const res = await fetch(`${BASE_URL}/api/stress/scenario?level=${lvl}&seed=${seed}`);
       if (res.ok) {
         const data = await res.json();
         setStressAmbulances(data.ambulances);
@@ -112,6 +112,10 @@ export function StressLabPage() {
           lng: baseH.position.lng + (Math.cos(i * 0.4) * 0.04),
         },
         homeHospital: (baseH as any).id || 'H01',
+        assignedIncidentId: null,
+        assignedHospitalId: null,
+        fuel: 100,
+        capability: 1,
       });
     }
 
@@ -137,6 +141,9 @@ export function StressLabPage() {
         createdAt: 0,
         status: 'active',
         description: 'Crisis stress load cluster',
+        assignedAmbulanceId: null,
+        assignedHospitalId: null,
+        etaMinutes: null,
       });
     }
 
@@ -370,7 +377,7 @@ export function StressLabPage() {
 
         {/* Center: Live Map Running Stress Load (6 cols) */}
         <div className="lg:col-span-6 space-y-3">
-          <Card className="p-0 overflow-hidden relative" style={{ height: '540px' }}>
+          <Card className="p-0 overflow-hidden relative h-[540px]">
             {/* Top Overlay Strip */}
             <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between p-2.5 rounded-lg backdrop-blur-md bg-black/60 border border-white/10 text-xs">
               <div className="flex items-center gap-2">

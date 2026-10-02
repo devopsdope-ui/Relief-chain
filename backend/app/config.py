@@ -21,7 +21,17 @@ except ImportError:
 class Settings:
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./reliefchain.db")
     BACKEND_PORT: int = int(os.getenv("BACKEND_PORT", "8000"))
+    # Comma-separated list of allowed frontend origins (whitespace stripped)
     FRONTEND_URL: str = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+    @classmethod
+    def frontend_origins(cls) -> list[str]:
+        origins = [o.strip() for o in cls.FRONTEND_URL.split(",") if o.strip()]
+        for extra in ("http://localhost:5173", "http://localhost:8000"):
+            if extra not in origins:
+                origins.append(extra)
+        return origins
+
     JWT_SECRET: str = os.getenv("JWT_SECRET", "reliefchain-disaster-resilience-secret-seed-42")
     SIMULATION_SEED: int = int(os.getenv("SIMULATION_SEED", "42"))
 
