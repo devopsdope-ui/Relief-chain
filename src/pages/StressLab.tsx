@@ -34,11 +34,11 @@ interface CrisisProfile {
 }
 
 const PROFILES: CrisisProfile[] = [
-  { level: 'L1', name: 'Normal day',         vehicles: 40,   incidents: 8,   budgetFps: 58, budgetFrameP95: 20, budgetSolveP95: 300 },
-  { level: 'L2', name: 'Major flood',        vehicles: 120,  incidents: 25,  budgetFps: 55, budgetFrameP95: 24, budgetSolveP95: 500 },
-  { level: 'L3', name: 'Citywide emergency', vehicles: 300,  incidents: 80,  budgetFps: 45, budgetFrameP95: 32, budgetSolveP95: 500 },
-  { level: 'L4', name: 'Catastrophe',        vehicles: 600,  incidents: 150, budgetFps: 30, budgetFrameP95: 50, budgetSolveP95: 800 },
-  { level: 'L5', name: 'Break test',         vehicles: 1200, incidents: 300, budgetFps: 15, budgetFrameP95: 80, budgetSolveP95: 1200 },
+  { level: 'L1', name: 'Normal day', vehicles: 40, incidents: 8, budgetFps: 58, budgetFrameP95: 20, budgetSolveP95: 300 },
+  { level: 'L2', name: 'Major flood', vehicles: 120, incidents: 25, budgetFps: 55, budgetFrameP95: 24, budgetSolveP95: 500 },
+  { level: 'L3', name: 'Citywide emergency', vehicles: 300, incidents: 80, budgetFps: 45, budgetFrameP95: 32, budgetSolveP95: 500 },
+  { level: 'L4', name: 'Catastrophe', vehicles: 600, incidents: 150, budgetFps: 30, budgetFrameP95: 50, budgetSolveP95: 800 },
+  { level: 'L5', name: 'Break test', vehicles: 1200, incidents: 300, budgetFps: 15, budgetFrameP95: 80, budgetSolveP95: 1200 },
 ];
 
 export function StressLabPage() {
@@ -85,7 +85,8 @@ export function StressLabPage() {
   // Load profile data from API or generate client-side
   const loadProfile = async (lvl: string) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/stress/scenario?level=${lvl}&seed=${seed}`);
+      const API = (import.meta.env.VITE_API_URL as string) || 'http://localhost:8000';
+      const res = await fetch(`${API}/api/stress/scenario?level=${lvl}&seed=${seed}`);
       if (res.ok) {
         const data = await res.json();
         setStressAmbulances(data.ambulances);
@@ -287,11 +288,10 @@ export function StressLabPage() {
                 <div
                   key={p.level}
                   onClick={() => !isRunning && setSelectedLevel(p.level)}
-                  className={`p-2.5 rounded-lg border cursor-pointer transition-all ${
-                    selectedLevel === p.level
+                  className={`p-2.5 rounded-lg border cursor-pointer transition-all ${selectedLevel === p.level
                       ? 'border-blue-500 bg-blue-500/10'
                       : 'border-white/5 bg-white/5 hover:border-white/20'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-xs text-white">{p.level}: {p.name}</span>
@@ -397,7 +397,7 @@ export function StressLabPage() {
                 roads={stressRoads}
                 selectedType={null}
                 selectedId={null}
-                onSelect={() => {}}
+                onSelect={() => { }}
                 simTime={elapsedSec}
               />
             </div>
